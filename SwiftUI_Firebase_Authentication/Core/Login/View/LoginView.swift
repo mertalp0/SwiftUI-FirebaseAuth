@@ -8,22 +8,27 @@
 import SwiftUI
 
 struct LoginView: View {
-    @State var email  = ""
-    @State var password  = ""
-    @State private var isActiveDestination: Bool = false
-    @State var activeDestinaiton : AnyView?
+    @StateObject var loginVM : LoginViewModel
+    init(){
+        self._loginVM = StateObject(wrappedValue: LoginViewModel(authService: AuthService()))
+    }
     var body: some View {
         VStack{
-               CustomTextField(text: $email, placeHolder: "email")
-               CustomTextField(text: $password, placeHolder: "password")
+            CustomTextField(text: $loginVM.email, placeHolder: "email")
+            CustomTextField(text: $loginVM.password, placeHolder: "password")
                 CustomButton(title: "SignIn", buttonColor: .blue, textColor: .white) {
-                    activeDestinaiton = AnyView(HomeView())
-                    isActiveDestination = true
+                    Task{
+                        loginVM.isActiveDestination =   await loginVM.signIn()
+                    }
                 }
         }.navigationTitle("Login View")
-        .navigationDestination(isPresented: $isActiveDestination, destination: {
-            activeDestinaiton
-        })                
+            .navigationDestination(isPresented: $loginVM.isActiveDestination, destination: {
+                HomeView().navigationBarBackButtonHidden(true)
+            })
+            .alert(isPresented: $loginVM.showAlert) {
+                Alert(title: Text(loginVM.alertTitle), message: Text( loginVM.alertMessage), dismissButton: .default(Text("Tamam")))
+            }
+     
     }
 }
 
