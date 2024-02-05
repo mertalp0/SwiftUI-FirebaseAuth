@@ -22,7 +22,7 @@ struct CustomButton: View {
                 .frame(width: size?.width ?? Const.width * 0.6 , height: size?.height ?? Const.height * 0.04 )
                 .background(buttonColor)
                 .foregroundColor(textColor ?? .white)
-                .cornerRadius(4)
+                .cornerRadius(10)
             
         }).shadow(color: Color.black.opacity(0.5), radius: 5, x: 2, y: 2)
 

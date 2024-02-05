@@ -14,9 +14,7 @@ class LoginViewModel: ObservableObject {
     @Published var email = ""
     @Published var password = ""
     @Published var isActiveDestination = false
-    
-    @Published var showingForgotPassword = false
-    @Published var textForgotEmail : String = ""
+
     
     @Published var showAlert = false
     @Published var alertTitle = ""
@@ -79,52 +77,6 @@ class LoginViewModel: ObservableObject {
             return false
         }
     }
-    
-    
-    
-    
-    
-
-    //TODO: RESET PASSWORD METHOD
-    func resetPassword() async {
-        guard !textForgotEmail.isEmpty else {
-            if let errorMessage = ErrorMessage(rawValue: 1) {
-                self.showAlert = true
-                self.alertTitle = "Hata!!"
-                self.alertMessage = errorMessage.description
-                print(errorMessage.description)
-            }
-            return
-        }
-        
-        guard textForgotEmail.isValidEmail else {
-            if let errorMessage = ErrorMessage(rawValue: 2) {
-                self.showAlert = true
-                self.alertTitle = "Hata!!"
-                self.alertMessage = errorMessage.description
-                print(errorMessage.description)
-            }
-            return
-        }
-        do {
-            try await authService.forgotPassword(email: textForgotEmail)
-            self.showAlert = true
-            self.alertTitle = "Başarılı.."
-            self.alertMessage = "Şifre sıfırlama bağlantısı e-posta adresinize gönderildi."
-            
-            print("Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.")
-            
-        } catch let error as NSError{
-            if let errorMessage = ErrorMessage(rawValue: error.code) {
-                self.showAlert = true
-                self.alertTitle = "Hata!!"
-                self.alertMessage = errorMessage.description
-                print(errorMessage.description)
-            }
-          
-        }
-    }
-    
 }
 
 
